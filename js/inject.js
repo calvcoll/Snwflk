@@ -23,7 +23,12 @@ chrome.runtime.onMessage.addListener(
 var changeStyle = function(url, name) {
     if (!(name == "none" || url == "none")) {
         $.get(url).done(function(data) {
-            current_style = '<style class="snwflk">' + data + '</style>';
+            var style = data;
+            if (style.indexOf('@-moz-document') > -1) { //to deal with "moz-document" to the start of a style
+                var index = style.indexOf('{');
+                style = style.substring(index + 1);
+            }
+            current_style = '<style class="snwflk">' + style + '</style>';
             $('.snwflk').remove();
             $(document.head).append(current_style);
             $('.snwflk').addClass(name)
