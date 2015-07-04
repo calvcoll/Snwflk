@@ -75,7 +75,9 @@ var Menu = React.createClass({displayName: "Menu",
             React.createElement("p", null, 
                 React.createElement("div", {className: "online"}, " ", this.state.online ? 'online' : 'offline'), 
                 React.createElement(Button, {url: "https://raw.githubusercontent.com/calvcoll/rhodochronsite/master/rhodo.css", name: "Rhodochronsite", current: this.state.current, setCurrent: this.setCurrent}), 
-                React.createElement(Button, {url: "https://raw.githubusercontent.com/WinterReign/Snowflake/master/snowflake%20classic%20black.css", name: "Snowflake-Classic-Black", current: this.state.current, setCurrent: this.setCurrent})
+                React.createElement(Button, {url: "https://raw.githubusercontent.com/WinterReign/Snowflake/master/snowflake%20classic%20black.css", name: "Snowflake-Classic-Black", current: this.state.current, setCurrent: this.setCurrent}), 
+                React.createElement(Button, {url: "https://raw.githubusercontent.com/WinterReign/Snowflake/master/snowflake%20classic%20light.css", name: "Snowflake-Classic-Light", current: this.state.current, setCurrent: this.setCurrent}), 
+                React.createElement(Button, {url: "https://raw.githubusercontent.com/FractalHexagon/Snowflake/master/snowflake%20minima%20black%20aero.css", name: "Snowflake-Minima-Black-Aero", current: this.state.current, setCurrent: this.setCurrent})
             )
         );
     }

@@ -10,7 +10,7 @@ chrome.runtime.onMessage.addListener(
         else if (message.start) {
             if ($('.snwflk')[0] != undefined) {
                 var classes = $('.snwflk')[0].className.split(/\s+/);
-                console.log(classes);
+                //console.log(classes);
                 sendResponse({button : classes[1]});
             } else {
                 sendResponse(undefined);
@@ -21,6 +21,26 @@ chrome.runtime.onMessage.addListener(
 
 // Getting round CORS implementation
 var changeStyle = function(url, name) {
+
+    $('link').each(function(index, element) {
+        element = $(element);
+        if (element.attr('rel') == "stylesheet" && element.attr('title')) {
+            if (name.indexOf('Light') > -1) {
+                if (element.attr('title') == "dark") {
+                    element.prop('disabled', true);
+                } else {
+                    element.prop('disabled', false);
+                }
+            }
+            else {
+                if (element.attr('title') == "dark") {
+                    element.prop('disabled', false);
+                } else {
+                    element.prop('disabled', true);
+                }
+            }
+        }
+    });
     if (!(name == "none" || url == "none")) {
         $.get(url).done(function(data) {
             var style = data;
