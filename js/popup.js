@@ -38,6 +38,11 @@ var Button = React.createClass({displayName: "Button",
 var Menu = React.createClass({displayName: "Menu",
    getInitialState: function() {
        var menu = this;
+       chrome.storage.sync.get('current', function(data) {
+           if (data.current != undefined) {
+               menu.setCurrent(data.current);
+           }
+       });
        chrome.tabs.query({url: '*://tweetdeck.twitter.com/*'}, function(tabs) {
            tabs.forEach(function(tab) {
                chrome.tabs.sendMessage(tab.id, {start:true}, function(response){
@@ -69,6 +74,7 @@ var Menu = React.createClass({displayName: "Menu",
     },
     setCurrent: function(name) {
         this.setState({current: name})
+        chrome.storage.sync.set({current: name});
     },
     render: function() {
         return (
