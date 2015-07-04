@@ -1,20 +1,35 @@
 var Button = React.createClass({
     onClick : function() {
-        url = this.props.url;
-        this.props.setCurrent(this.props.url);
+        var url = this.props.url;
+        var name = this.props.name;
+        var inUse = this.props.current == this.props.name;
+        if (!inUse) {
+            this.props.setCurrent(this.props.name);
+        } else {
+            this.props.setCurrent("none");
+            name = "none";
+            url = "none";
+        }
 
         chrome.tabs.query({url: '*://tweetdeck.twitter.com/*'}, function(tabs) {
             tabs.forEach(function(tab) {
-               chrome.tabs.sendMessage(tab.id, {'url' : url}, function(){
-                   console.log("message sent:" + url);
+               chrome.tabs.sendMessage(tab.id, {
+                   url : url,
+                   name : name
+               }, function(){
+                   console.log("message sent:" + name);
                });
             });
         });
     },
    render: function() {
+       var rendername = this.props.name;
+       if (this.props.name.indexOf('-')>-1) {
+           rendername = this.props.name.split('-').join(' ');
+       }
         return (
-            <button className={(this.props.current == this.props.url) ? "inUse" : ""} onClick={this.onClick}>
-                {this.props.name}
+            <button className={(this.props.current == this.props.name) ? "inUse" : ""} onClick={this.onClick}>
+                {rendername}
                 <br />
             </button>
         );
@@ -22,30 +37,45 @@ var Button = React.createClass({
 });
 var Menu = React.createClass({
    getInitialState: function() {
+       var menu = this;
+       chrome.tabs.query({url: '*://tweetdeck.twitter.com/*'}, function(tabs) {
+           tabs.forEach(function(tab) {
+               chrome.tabs.sendMessage(tab.id, {start:true}, function(response){
+                   console.log("message sent: looking for a button ");
+                   console.log(response);
+                   if (response != undefined) {
+                       console.log('button got');
+                       menu.setCurrent(response.button);
+                   }
+                   else {
+                       menu.setCurrent(response.button);
+                   }
+               });
+           });
+       });
        return {
            online : false,
            option : "",
            current : ""
        }
    },
-    setOnline: function() {
-        this.setState({
-            online: true
+    componentDidMount: function() {
+        menu = this;
+        $.get(chrome.extension.getURL("popup.html"), function() {
+            menu.setState({
+                online: true
+            });
         });
     },
-    componentDidMount: function() {
-        $.get(chrome.extension.getURL("popup.html"), this.setOnline)
+    setCurrent: function(name) {
+        this.setState({current: name})
     },
     render: function() {
-        var menu = this;
-        var setCurrent = function(url) {
-            menu.setState({current: url})
-        };
         return (
             <p>
                 <div className="online"> {this.state.online ? 'online' : 'offline'}</div>
-                <Button url="https://raw.githubusercontent.com/calvcoll/rhodochronsite/master/rhodo.css" name="Rhodochronsite" current={this.state.current} setCurrent={setCurrent}/>
-                <Button url="https://raw.githubusercontent.com/WinterReign/Snowflake/master/snowflake%20classic%20black.css" name="Snwflk Classic Black" current={this.state.current} setCurrent={setCurrent}/>
+                <Button url="https://raw.githubusercontent.com/calvcoll/rhodochronsite/master/rhodo.css" name="Rhodochronsite" current={this.state.current} setCurrent={this.setCurrent}/>
+                <Button url="https://raw.githubusercontent.com/WinterReign/Snowflake/master/snowflake%20classic%20black.css" name="Snowflake-Classic-Black" current={this.state.current} setCurrent={this.setCurrent}/>
             </p>
         );
     }
