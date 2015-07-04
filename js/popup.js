@@ -38,30 +38,16 @@ var Button = React.createClass({displayName: "Button",
 var Menu = React.createClass({displayName: "Menu",
    getInitialState: function() {
        var menu = this;
-       chrome.storage.sync.get('current', function(data) {
+       var current = "";
+       chrome.storage.sync.get('current', function(data) { //gets sync data -> current button
            if (data.current != undefined) {
                menu.setCurrent(data.current);
            }
        });
-       chrome.tabs.query({url: '*://tweetdeck.twitter.com/*'}, function(tabs) {
-           tabs.forEach(function(tab) {
-               chrome.tabs.sendMessage(tab.id, {start:true}, function(response){
-                   console.log("message sent: looking for a button ");
-                   console.log(response);
-                   if (response != undefined) {
-                       console.log('button got');
-                       menu.setCurrent(response.button);
-                   }
-                   else {
-                       menu.setCurrent(response.button);
-                   }
-               });
-           });
-       });
        return {
            online : false,
            option : "",
-           current : ""
+           current : current
        }
    },
     componentDidMount: function() {
@@ -73,7 +59,7 @@ var Menu = React.createClass({displayName: "Menu",
         });
     },
     setCurrent: function(name) {
-        this.setState({current: name})
+        this.setState({current: name});
         chrome.storage.sync.set({current: name});
     },
     render: function() {
@@ -89,3 +75,19 @@ var Menu = React.createClass({displayName: "Menu",
     }
 });
 React.render(React.createElement(Menu, null), document.getElementById("menu"));
+
+
+var DEPRECRATED_TABGET = function () {
+    //chrome.tabs.query({url: '*://tweetdeck.twitter.com/*'}, function(tabs) {
+    //    tabs.forEach(function(tab) {
+    //        chrome.tabs.sendMessage(tab.id, {start:true}, function(response){
+    //            console.log("message sent: looking for a button ");
+    //            console.log(response);
+    //            if (!(response == undefined || response.button == null || response.button == "")) {
+    //                 console.log('button got');
+    //                 current = response.button;
+    //            }
+    //        });
+    //    });
+    //});
+}
