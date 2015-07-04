@@ -1,0 +1,47 @@
+<!doctype html>
+<!--
+ This page is shown when the extension button is clicked, because the
+ "browser_action" field in manifest.json contains the "default_popup" key with
+ value "popup.html".
+ -->
+<html>
+  <head>
+    <title>Getting Started Extension's Popup</title>
+    <style>
+      body {
+        font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+        font-size: 100%;
+        width: 100px;
+      }
+      button {
+        background-color: cornflowerblue;
+        border-color: dodgerblue;
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        border-radius: 2px;
+        color:white;
+      }
+      button.inUse {
+        background-color: green;
+        border-color: forestgreen;
+      }
+    </style>
+
+    <!--
+      - JavaScript and HTML must be in separate files: see our Content Security
+      - Policy documentation[1] for details and explanation.
+      -
+      - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
+     -->
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+  </head>
+  <body>
+    <h2>Snwflk</h2>
+    <div id="test"></div>
+    <div id="menu"></div>
+    <!-- React has to go at bottom :P -->
+    <script src="js/react.dev.js"></script>
+    <!-- <script src="jsx-transformer.js"></script> -->
+    <script src="js/popup.js"></script>
+  </body>
+</html>
