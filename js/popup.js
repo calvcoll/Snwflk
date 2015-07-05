@@ -71,19 +71,3 @@ var Menu = React.createClass({displayName: "Menu",
     }
 });
 React.render(React.createElement(Menu, null), document.getElementById("menu"));
-
-
-var DEPRECRATED_TABGET = function () {
-    //chrome.tabs.query({url: '*://tweetdeck.twitter.com/*'}, function(tabs) {
-    //    tabs.forEach(function(tab) {
-    //        chrome.tabs.sendMessage(tab.id, {start:true}, function(response){
-    //            console.log("message sent: looking for a button ");
-    //            console.log(response);
-    //            if (!(response == undefined || response.button == null || response.button == "")) {
-    //                 console.log('button got');
-    //                 current = response.button;
-    //            }
-    //        });
-    //    });
-    //});
-}
