@@ -1,22 +1,44 @@
 var Button = React.createClass({
-    onClick : function() {
-        var url = this.props.url;
-        var name = this.props.name;
-        var inUse = this.props.current == this.props.name;
-        if (!inUse) {
-            this.props.setCurrent(this.props.name, this.props.url);
-        } else {
-            this.props.setCurrent("none", "none");
+    getInitialState: function() {
+        var button = this;
+        chrome.storage.sync.get('toggle', function(data) { //gets sync data -> current button
+            if ((data.toggle == true || data.toggle == false) &&
+            (data.toggle != undefined || data.toggle != null)) {
+                button.setState({on: data.toggle}); // I have no idea why it has to be opposite but I'm not moaning.
+            }
+        });
+        return {
+            on: true
         }
     },
+    iconToggle: function () {
+        var icon = !this.state.on ? "img/snowflake_logo-48.png" : "img/snowflake_logo-48-disabled.png";
+        chrome.browserAction.setIcon({path: icon});
+
+        $('#logo').attr("src", icon);
+    },
+    toggle: function() {
+        this.setState({on: !this.state.on});
+        chrome.storage.sync.set({toggle: !this.state.on});
+        this.iconToggle();
+    },
+    onClick: function() {
+        this.toggle();
+        var button = this;
+        chrome.tabs.query({url: '*://tweetdeck.twitter.com/*'}, function(tabs) {
+            tabs.forEach(function(tab) {
+                chrome.tabs.sendMessage(tab.id, {
+                    toggle : button.state.on
+                }, function(){
+                    console.log("message sent: toggle");
+                });
+            });
+        });
+    },
    render: function() {
-       var rendername = this.props.name;
-       if (this.props.name.indexOf('-')>-1) {
-           rendername = this.props.name.split('-').join(' ');
-       }
         return (
-            <button className={(this.props.current == this.props.name) ? "inUse" : ""} onClick={this.onClick}>
-                {rendername}
+            <button onClick={this.onClick} className={(this.state.on) ? "inUse" : ""}>
+                {this.props.name}
                 <br />
             </button>
         );
@@ -26,11 +48,6 @@ var Menu = React.createClass({
    getInitialState: function() {
        var menu = this;
        var current = "";
-       chrome.storage.sync.get(null, function(data) { //gets sync data -> current button
-           if (data.name != undefined && data.url != undefined) {
-               menu.setCurrent(data.name, data.url);
-           }
-       });
        return {
            online : false,
            option : "",
@@ -45,32 +62,10 @@ var Menu = React.createClass({
             });
         });
     },
-    setCurrent: function(style_name,style_url) {
-        this.setState({current: style_name});
-        chrome.storage.sync.set({
-            name : style_name,
-            url : style_url
-        });
-
-        chrome.tabs.query({url: '*://tweetdeck.twitter.com/*'}, function(tabs) {
-            tabs.forEach(function(tab) {
-                chrome.tabs.sendMessage(tab.id, {
-                    url : style_url,
-                    name : style_name
-                }, function(){
-                    console.log("message sent:" + style_name + " " + style_url);
-                });
-            });
-        });
-    },
     render: function() {
         return (
             <p>
-                <div className="online"> {this.state.online ? 'online' : 'offline'}</div>
-                <Button url="https://raw.githubusercontent.com/calvcoll/rhodochronsite/master/rhodo.css" name="Rhodochronsite" current={this.state.current} setCurrent={this.setCurrent}/>
-                <Button url="https://raw.githubusercontent.com/WinterReign/Snowflake/master/snowflake%20classic%20black.css" name="Snowflake-Classic-Black" current={this.state.current} setCurrent={this.setCurrent}/>
-                <Button url="https://raw.githubusercontent.com/WinterReign/Snowflake/master/snowflake%20classic%20light.css" name="Snowflake-Classic-Light" current={this.state.current} setCurrent={this.setCurrent}/>
-                <Button url="https://raw.githubusercontent.com/FractalHexagon/Snowflake/master/snowflake%20minima%20black%20aero.css" name="Snowflake-Minima-Black-Aero" current={this.state.current} setCurrent={this.setCurrent}/>
+                <Button name="Toggle"/>
             </p>
         );
     }
