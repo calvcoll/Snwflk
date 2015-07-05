@@ -2,7 +2,7 @@ var current_style = '';
 
 chrome.runtime.onMessage.addListener(
     function(message, sender, sendResponse) {
-        if (message.url) {
+        if (message.url && message.name) {
             //console.log('recieved message (url): ' + message.url);
             changeStyle(message.url, message.name);
             sendResponse({'':''});

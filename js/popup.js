@@ -4,23 +4,10 @@ var Button = React.createClass({displayName: "Button",
         var name = this.props.name;
         var inUse = this.props.current == this.props.name;
         if (!inUse) {
-            this.props.setCurrent(this.props.name);
+            this.props.setCurrent(this.props.name, this.props.url);
         } else {
-            this.props.setCurrent("none");
-            name = "none";
-            url = "none";
+            this.props.setCurrent("none", "none");
         }
-
-        chrome.tabs.query({url: '*://tweetdeck.twitter.com/*'}, function(tabs) {
-            tabs.forEach(function(tab) {
-               chrome.tabs.sendMessage(tab.id, {
-                   url : url,
-                   name : name
-               }, function(){
-                   console.log("message sent:" + name);
-               });
-            });
-        });
     },
    render: function() {
        var rendername = this.props.name;
@@ -39,9 +26,9 @@ var Menu = React.createClass({displayName: "Menu",
    getInitialState: function() {
        var menu = this;
        var current = "";
-       chrome.storage.sync.get('current', function(data) { //gets sync data -> current button
-           if (data.current != undefined) {
-               menu.setCurrent(data.current);
+       chrome.storage.sync.get(null, function(data) { //gets sync data -> current button
+           if (data.name != undefined && data.url != undefined) {
+               menu.setCurrent(data.name, data.url);
            }
        });
        return {
@@ -58,9 +45,23 @@ var Menu = React.createClass({displayName: "Menu",
             });
         });
     },
-    setCurrent: function(name) {
-        this.setState({current: name});
-        chrome.storage.sync.set({current: name});
+    setCurrent: function(style_name,style_url) {
+        this.setState({current: style_name});
+        chrome.storage.sync.set({
+            name : style_name,
+            url : style_url
+        });
+
+        chrome.tabs.query({url: '*://tweetdeck.twitter.com/*'}, function(tabs) {
+            tabs.forEach(function(tab) {
+                chrome.tabs.sendMessage(tab.id, {
+                    url : style_url,
+                    name : style_name
+                }, function(){
+                    console.log("message sent:" + style_name + " " + style_url);
+                });
+            });
+        });
     },
     render: function() {
         return (
