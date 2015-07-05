@@ -1,4 +1,10 @@
-var current_style = '';
+$(document.head).ready(function() {
+    chrome.storage.sync.get(null, function(data) { //gets sync data -> current button
+        if (data.name != undefined && data.url != undefined) {
+            changeStyle(data.url, data.name);
+        }
+    });
+});
 
 chrome.runtime.onMessage.addListener(
     function(message, sender, sendResponse) {
@@ -48,7 +54,7 @@ var changeStyle = function(url, name) {
                 var index = style.indexOf('{');
                 style = style.substring(index + 1);
             }
-            current_style = '<style class="snwflk">' + style + '</style>';
+            var current_style = '<style class="snwflk">' + style + '</style>';
             $('.snwflk').remove();
             $(document.head).append(current_style);
             $('.snwflk').addClass(name)
