@@ -78,7 +78,7 @@ var NavBar = React.createClass({
         var navbar = this;
         this.props.menus.forEach(function(menu) {
             if (menu.props.id == navbar.props.default_id) {
-                renderElements.push(<li className="#selected"><a href={"#"+ menu.props.id}>{menu.props.id}</a></li>);
+                renderElements.push(<li className="selected"><a href={"#"+ menu.props.id}>{menu.props.id}</a></li>);
             }
             else {
                 renderElements.push(<li><a href={"#"+ menu.props.id}>{menu.props.id}</a></li>);

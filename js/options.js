@@ -78,7 +78,7 @@ var NavBar = React.createClass({displayName: "NavBar",
         var navbar = this;
         this.props.menus.forEach(function(menu) {
             if (menu.props.id == navbar.props.default_id) {
-                renderElements.push(React.createElement("li", {className: "#selected"}, React.createElement("a", {href: "#"+ menu.props.id}, menu.props.id)));
+                renderElements.push(React.createElement("li", {className: "selected"}, React.createElement("a", {href: "#"+ menu.props.id}, menu.props.id)));
             }
             else {
                 renderElements.push(React.createElement("li", null, React.createElement("a", {href: "#"+ menu.props.id}, menu.props.id)));
