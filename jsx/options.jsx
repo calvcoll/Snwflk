@@ -78,7 +78,7 @@ var NavBar = React.createClass({
         var navbar = this;
         this.props.menus.forEach(function(menu) {
             if (menu.props.id == navbar.props.default_id) {
-                renderElements.push(<li className="selected"><a href={"#"+ menu.props.id}>{menu.props.id}</a></li>);
+                renderElements.push(<li className="selected"><a href={"#"+ menu.props.id}>{menu.props.human_id}</a></li>);
             }
             else {
                 renderElements.push(<li><a href={"#"+ menu.props.id}>{menu.props.id}</a></li>);
@@ -103,7 +103,7 @@ var MainView = React.createClass({
         var view = this;
         this.props.menus.forEach(function(menu) {
             if (menu.props.id == view.props.default_id) {
-                renderElements.push(<div id={menu.props.id} className="selected">{menu}</div>);
+                renderElements.push(<div id={menu.props.id} className="selected"><h1>{menu.props.human_id}</h1><hr />{menu}</div>);
             }
             else {
                 renderElements.push(<div id={menu.props.id}>{menu}</div>);
@@ -121,7 +121,7 @@ var Frame = React.createClass({
         return {
             default_id : "styleSwitcher", // may cause problems in the future. (overwriting shit)
             menus : [
-                <Menu id="styleSwitcher"/>
+                <Menu id="styleSwitcher" human_id="Styles"/>
             ]
         }
     },
@@ -135,19 +135,3 @@ var Frame = React.createClass({
     }
 });
 React.render(<Frame />, document.body);
-
-
-var DEPRECRATED_TABGET = function () {
-    //chrome.tabs.query({url: '*://tweetdeck.twitter.com/*'}, function(tabs) {
-    //    tabs.forEach(function(tab) {
-    //        chrome.tabs.sendMessage(tab.id, {start:true}, function(response){
-    //            console.log("message sent: looking for a button ");
-    //            console.log(response);
-    //            if (!(response == undefined || response.button == null || response.button == "")) {
-    //                 console.log('button got');
-    //                 current = response.button;
-    //            }
-    //        });
-    //    });
-    //});
-};

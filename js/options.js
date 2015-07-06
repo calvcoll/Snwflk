@@ -78,7 +78,7 @@ var NavBar = React.createClass({displayName: "NavBar",
         var navbar = this;
         this.props.menus.forEach(function(menu) {
             if (menu.props.id == navbar.props.default_id) {
-                renderElements.push(React.createElement("li", {className: "selected"}, React.createElement("a", {href: "#"+ menu.props.id}, menu.props.id)));
+                renderElements.push(React.createElement("li", {className: "selected"}, React.createElement("a", {href: "#"+ menu.props.id}, menu.props.human_id)));
             }
             else {
                 renderElements.push(React.createElement("li", null, React.createElement("a", {href: "#"+ menu.props.id}, menu.props.id)));
@@ -103,7 +103,7 @@ var MainView = React.createClass({displayName: "MainView",
         var view = this;
         this.props.menus.forEach(function(menu) {
             if (menu.props.id == view.props.default_id) {
-                renderElements.push(React.createElement("div", {id: menu.props.id, className: "selected"}, menu));
+                renderElements.push(React.createElement("div", {id: menu.props.id, className: "selected"}, React.createElement("h1", null, menu.props.human_id), React.createElement("hr", null), menu));
             }
             else {
                 renderElements.push(React.createElement("div", {id: menu.props.id}, menu));
@@ -121,7 +121,7 @@ var Frame = React.createClass({displayName: "Frame",
         return {
             default_id : "styleSwitcher", // may cause problems in the future. (overwriting shit)
             menus : [
-                React.createElement(Menu, {id: "styleSwitcher"})
+                React.createElement(Menu, {id: "styleSwitcher", human_id: "Styles"})
             ]
         }
     },
@@ -135,19 +135,3 @@ var Frame = React.createClass({displayName: "Frame",
     }
 });
 React.render(React.createElement(Frame, null), document.body);
-
-
-var DEPRECRATED_TABGET = function () {
-    //chrome.tabs.query({url: '*://tweetdeck.twitter.com/*'}, function(tabs) {
-    //    tabs.forEach(function(tab) {
-    //        chrome.tabs.sendMessage(tab.id, {start:true}, function(response){
-    //            console.log("message sent: looking for a button ");
-    //            console.log(response);
-    //            if (!(response == undefined || response.button == null || response.button == "")) {
-    //                 console.log('button got');
-    //                 current = response.button;
-    //            }
-    //        });
-    //    });
-    //});
-};
