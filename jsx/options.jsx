@@ -19,21 +19,21 @@ var Button = React.createClass({
         );
     }
 });
-var Menu = React.createClass({
-   getInitialState: function() {
-       var menu = this;
-       var current = "";
-       chrome.storage.sync.get(null, function(data) { //gets sync data -> current button
-           if (data.name != undefined && data.url != undefined) {
-               menu.setCurrent(data.name, data.url);
-           }
-       });
-       return {
-           online : false,
-           option : "",
-           current : current
-       }
-   },
+var StyleMenu = React.createClass({
+    getInitialState: function() {
+        var menu = this;
+        var current = "";
+        chrome.storage.sync.get(null, function(data) { //gets sync data -> current button
+            if (data.name != undefined && data.url != undefined) {
+                menu.setCurrent(data.name, data.url);
+            }
+        });
+        return {
+            online : false,
+            option : "",
+            current : current
+        }
+    },
     componentDidMount: function() {
         var menu = this;
         $.get(chrome.extension.getURL("popup.html"), function() {
@@ -72,6 +72,15 @@ var Menu = React.createClass({
         );
     }
 });
+var ScriptMenu = React.createClass({
+    render: function() {
+        return (
+            <div>
+                It works!
+            </div>
+        )
+    }
+});
 var NavBar = React.createClass({
     render: function () {
         var renderElements = [];
@@ -81,7 +90,7 @@ var NavBar = React.createClass({
                 renderElements.push(<li className="selected"><a href={"#"+ menu.props.id}>{menu.props.human_id}</a></li>);
             }
             else {
-                renderElements.push(<li><a href={"#"+ menu.props.id}>{menu.props.id}</a></li>);
+                renderElements.push(<li><a href={"#"+ menu.props.id}>{menu.props.human_id}</a></li>);
             }
         });
         return (
@@ -106,7 +115,7 @@ var MainView = React.createClass({
                 renderElements.push(<div id={menu.props.id} className="selected"><h1>{menu.props.human_id}</h1><hr />{menu}</div>);
             }
             else {
-                renderElements.push(<div id={menu.props.id}>{menu}</div>);
+                renderElements.push(<div id={menu.props.id}><h1>{menu.props.human_id}</h1><hr />{menu}</div>);
             }
         });
         return (
@@ -121,7 +130,8 @@ var Frame = React.createClass({
         return {
             default_id : "styleSwitcher", // may cause problems in the future. (overwriting shit)
             menus : [
-                <Menu id="styleSwitcher" human_id="Styles"/>
+                <StyleMenu id="styleSwitcher" human_id="Styles"/>,
+                <ScriptMenu id="jsMenu" human_id="Javascript" />
             ]
         }
     },
