@@ -1,12 +1,11 @@
 var Button = React.createClass({displayName: "Button",
     getInitialState: function() {
-        var button = this;
         chrome.storage.sync.get('toggle', function(data) { //gets sync data -> current button
             if ((data.toggle == true || data.toggle == false) &&
             (data.toggle != undefined || data.toggle != null)) {
-                button.setState({on: data.toggle}); // I have no idea why it has to be opposite but I'm not moaning.
+                this.setState({on: data.toggle}); // I have no idea why it has to be opposite but I'm not moaning.
             }
-        });
+        }.bind(this));
         return {
             on: true
         }
@@ -24,7 +23,6 @@ var Button = React.createClass({displayName: "Button",
     },
     onClick: function() {
         this.toggle();
-        var button = this;
         chrome.tabs.query({url: '*://tweetdeck.twitter.com/*'}, function(tabs) {
             tabs.forEach(function(tab) {
                 chrome.tabs.sendMessage(tab.id, {
@@ -33,7 +31,7 @@ var Button = React.createClass({displayName: "Button",
                     console.log("message sent: toggle");
                 });
             });
-        });
+        }.bind(this));
     },
    render: function() {
         return (
@@ -46,7 +44,6 @@ var Button = React.createClass({displayName: "Button",
 });
 var Menu = React.createClass({displayName: "Menu",
    getInitialState: function() {
-       var menu = this;
        var current = "";
        return {
            online : false,
@@ -55,12 +52,11 @@ var Menu = React.createClass({displayName: "Menu",
        }
    },
     componentDidMount: function() {
-        menu = this;
         $.get(chrome.extension.getURL("popup.html"), function() {
-            menu.setState({
+            this.setState({
                 online: true
             });
-        });
+        }.bind(this));
     },
     render: function() {
         return (

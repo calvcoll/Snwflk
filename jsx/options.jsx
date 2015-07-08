@@ -35,12 +35,12 @@ var StyleMenu = React.createClass({
         }
     },
     componentDidMount: function() {
-        var menu = this;
-        $.get(chrome.extension.getURL("popup.html"), function() {
-            menu.setState({
+        //$.get(chrome.extension.getURL("popup.html"), function() {
+        $.get('https://raw.githubusercontent.com/calvcoll/rhodochronsite/master/rhodo.css', function() { // using rhodo as is hosted on github (won't re-direct)
+            this.setState({
                 online: true
             });
-        });
+        }.bind(this));
     },
     setCurrent: function(style_name,style_url) {
         this.setState({current: style_name});
@@ -55,7 +55,7 @@ var StyleMenu = React.createClass({
                     url : style_url,
                     name : style_name
                 }, function(){
-                    console.log("message sent:" + style_name + " " + style_url);
+                    //console.log("message sent:" + style_name + " " + style_url);
                 });
             });
         });
@@ -63,7 +63,7 @@ var StyleMenu = React.createClass({
     render: function() {
         return (
             <div className="buttonContainer">
-                <div className="online"> {this.state.online ? 'online' : 'offline'}</div>
+                <div className="online"> Online: <div className={"online-icon " + (this.state.online ? 'online' : 'offline')}/></div>
                 <Button url="https://raw.githubusercontent.com/calvcoll/rhodochronsite/master/rhodo.css" name="Rhodochronsite" current={this.state.current} setCurrent={this.setCurrent}/>
                 <Button url="https://raw.githubusercontent.com/WinterReign/Snowflake/master/snowflake%20classic%20black.css" name="Snowflake-Classic-Black" current={this.state.current} setCurrent={this.setCurrent}/>
                 <Button url="https://raw.githubusercontent.com/WinterReign/Snowflake/master/snowflake%20classic%20light.css" name="Snowflake-Classic-Light" current={this.state.current} setCurrent={this.setCurrent}/>
@@ -84,19 +84,18 @@ var ScriptMenu = React.createClass({
 var NavBar = React.createClass({
     render: function () {
         var renderElements = [];
-        var navbar = this;
         this.props.menus.forEach(function(menu) {
-            if (menu.props.id == navbar.props.default_id) {
-                renderElements.push(<li className="selected"><a href={"#"+ menu.props.id}>{menu.props.human_id}</a></li>);
+            if (menu.props.id == this.props.default_id) {
+                renderElements.push(<li key={menu.props.id} className="selected"><a href={"#"+ menu.props.id}>{menu.props.human_id}</a></li>);
             }
             else {
-                renderElements.push(<li><a href={"#"+ menu.props.id}>{menu.props.human_id}</a></li>);
+                renderElements.push(<li key={menu.props.id}><a href={"#"+ menu.props.id}>{menu.props.human_id}</a></li>);
             }
-        });
+        }.bind(this));
         return (
             <div className="navigation">
                 <div className="logo">
-                    <img class="logo" src="img/snowflake_logo-48.png" alt="snowflake-logo"></img>
+                    <img className="logo" src="img/snowflake_logo-48.png" alt="snowflake-logo"></img>
                     <h2>Snwflk</h2>
                 </div>
                 <ul className="menu">
@@ -109,15 +108,14 @@ var NavBar = React.createClass({
 var MainView = React.createClass({
     render: function() {
         var renderElements = [];
-        var view = this;
         this.props.menus.forEach(function(menu) {
-            if (menu.props.id == view.props.default_id) {
-                renderElements.push(<div id={menu.props.id} className="selected"><h1>{menu.props.human_id}</h1><hr />{menu}</div>);
+            if (menu.props.id == this.props.default_id) {
+                renderElements.push(<div key={menu.props.id} id={menu.props.id} className="selected"><h1>{menu.props.human_id}</h1><hr />{menu}</div>);
             }
             else {
-                renderElements.push(<div id={menu.props.id}><h1>{menu.props.human_id}</h1><hr />{menu}</div>);
+                renderElements.push(<div key={menu.props.id} id={menu.props.id}><h1>{menu.props.human_id}</h1><hr />{menu}</div>);
             }
-        });
+        }.bind(this));
         return (
             <div className="mainview view">
                 {renderElements}
@@ -128,7 +126,7 @@ var MainView = React.createClass({
 var Frame = React.createClass({
     getInitialState: function() {
         return {
-            default_id : "styleSwitcher", // may cause problems in the future. (overwriting shit)
+            default_id : "styleSwitcher",
             menus : [
                 <StyleMenu id="styleSwitcher" human_id="Styles"/>,
                 <ScriptMenu id="jsMenu" human_id="Javascript" />
