@@ -18,7 +18,10 @@
   "permissions" : [
     "tabs",
     "storage",
-    "*://*.githubusercontent.com/*"
+    "*://*.githubusercontent.com/*",
+    "*://*.github.com/*",
+    "*://s3.amazonaws.com/github-cloud/*",
+    "*://fonts.googleapis.com/*"
   ],
   "content_scripts": [{
       "matches" : ["https://tweetdeck.twitter.com/*"],

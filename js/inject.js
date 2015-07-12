@@ -4,6 +4,7 @@ $(document.head).ready(function() {
             changeStyle(data.url, data.name);
         }
     });
+    injectFonts();
 });
 
 var toggle = true;
@@ -36,6 +37,17 @@ chrome.runtime.onMessage.addListener(
         }
     }
 );
+
+var fonts = [
+    '//fonts.googleapis.com/css?family=Open+Sans'
+];
+var injectFonts = function() {
+    fonts.forEach(function(font) {
+        $.get(font, function(data){
+            $(document.head).append("<style class=\"SnwflkFont\">" + data + "</style>");
+        });
+    });
+};
 
 // Getting round CORS implementation
 var changeStyle = function(url, name) {
