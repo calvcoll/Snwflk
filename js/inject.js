@@ -1,4 +1,13 @@
 $(document.head).ready(function() {
+    chrome.storage.sync.get(["current_add_on", "current_add_on_url"], function(data) {
+        var addons = data.current_add_on;
+        var addons_url = data.current_add_on_url;
+        if (addons != undefined) {
+            addons.forEach(function(element, index){
+                addon(addons_url[index], element, true);
+            })
+        }
+    });
     chrome.storage.sync.get(null, function(data) { //gets sync data -> current button
         if (data.name != undefined && data.url != undefined) {
             changeStyle(data.url, data.name);
@@ -18,7 +27,11 @@ chrome.runtime.onMessage.addListener(
         if (message.url && message.name) {
             //console.log('recieved message (url): ' + message.url);
             changeStyle(message.url, message.name);
-            sendResponse({'':''});
+            sendResponse({});
+        }
+        else if (message.addon_url && message.addon_name && (message.addon_on != undefined)) {
+            addon(message.addon_url, message.addon_name, message.addon_on);
+            sendResponse({});
         }
         else if (message.toggle == true || message.toggle == false &&
             (message.toggle != undefined || message.toggle != null)) {
@@ -27,8 +40,8 @@ chrome.runtime.onMessage.addListener(
             changeStyle(lastStyle.url, lastStyle.name);
         }
         else if (message.start) {
-            if ($('.snwflk')[0] != undefined) {
-                var classes = $('.snwflk')[0].className.split(/\s+/);
+            if ($('.snwflk.style')[0] != undefined) {
+                var classes = $('.snwflk.style')[0].className.split(/\s+/);
                 //console.log(classes);
                 sendResponse({button : classes[1]});
             } else {
@@ -39,14 +52,36 @@ chrome.runtime.onMessage.addListener(
 );
 
 var fonts = [
-    '//fonts.googleapis.com/css?family=Open+Sans'
+    "//fonts.googleapis.com/css?family=Open+Sans"
 ];
 var injectFonts = function() {
     fonts.forEach(function(font) {
         $.get(font, function(data){
-            $(document.head).append("<style class=\"SnwflkFont\">" + data + "</style>");
+            $(document.head).append("<style class=\"snwflkFont\">" + data + "</style>");
         });
     });
+};
+
+var addon = function(url, name, on) {
+    if (on) {
+        $.get(url).done(function (data) {
+            //if (url.indexOf('.scss') >= 0) {
+            //    sass.compile(data, function(result) {
+            //        var element = "<style class=\"snwflk addon " + name + "\">" + result + "</style>";
+            //        $(document.head).append(element);
+            //    })
+            //} else {
+                var element = "<style class=\"snwflk addon " + name + "\">" + data + "</style>";
+                $(document.head).append(element);
+            //}
+        });
+    } else {
+        var item = $('.snwflk.addon.' + name);
+        console.log(item);
+        if (item) {
+            item.remove();
+        }
+    }
 };
 
 // Getting round CORS implementation
@@ -81,10 +116,10 @@ var changeStyle = function(url, name) {
                     var index = style.indexOf('{');
                     style = style.substring(index + 1);
                 }
-                var current_style = '<style class="snwflk">' + style + '</style>';
-                $('.snwflk').remove();
+                var current_style = '<style class="snwflk style">' + style + '</style>';
+                $('.snwflk.style').remove();
                 $(document.head).append(current_style);
-                $('.snwflk').addClass(name)
+                $('.snwflk.style').addClass(name)
             });
         } else {
             $('.snwflk').remove();

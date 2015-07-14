@@ -9,14 +9,88 @@ var Button = React.createClass({
     },
    render: function() {
        var rendername = this.props.name;
-       if (this.props.name.indexOf('-')>-1) {
-           rendername = this.props.name.split('-').join(' ');
+       if (rendername.indexOf('-')>-1) {
+           rendername = rendername.split('-').join(' ');
        }
         return (
             <button className="chrome-bootstrap" onClick={this.onClick}>
                 {rendername} { + (this.props.current == this.props.name) ? " ✓" : ""}
             </button>
         );
+    }
+});
+var ToggleButton = React.createClass({
+    getInitialState: function() {
+        chrome.storage.sync.get(null, function(data) {
+            if (data.current_add_on != undefined) {
+                var index = data.current_add_on.indexOf(this.props.name);
+                if (index >= 0) {
+                    this.setState({on : true});
+                }
+            }
+        }.bind(this));
+        return {
+            on : false
+        }
+    },
+    onClick: function() {
+        var oldState = this.state.on;
+        var url = this.props.url;
+        var name = this.props.name;
+        this.setState({ on : !oldState });
+        var in_list = false;
+        var list = [];
+        var url_list = [];
+        chrome.storage.sync.get(null, function(data) { //active
+            list = data.current_add_on;
+            url_list = data.current_add_on_url;
+            if (list != undefined) {
+                var index = list.indexOf(this.props.name);
+                if (index >= 0) {
+                    in_list = true;
+                }
+            }
+        }.bind(this));
+        list = list == undefined ? [] : list;
+        url_list = url_list == undefined ? [] : url_list;
+        var new_list = list;
+        var new_url_list = url_list;
+        if (oldState && in_list) { //no oldState && !inList as no change needed
+            var index = list.indexOf(this.props.name);
+            if (index >= 0) {
+                new_list = list.splice(index, 1);
+                new_url_list = url_list.splice(index, 1);
+            }
+        } else if (!oldState && !in_list) { //no !oldstate && in_list as addon is needed
+            new_list.push(this.props.name);
+            new_url_list.push(this.props.url);
+        }
+        chrome.storage.sync.set({
+            current_add_on : new_list,
+            current_add_on_url : new_url_list
+        });
+        chrome.tabs.query({url: '*://tweetdeck.twitter.com/*'}, function(tabs) {
+            tabs.forEach(function(tab) {
+                chrome.tabs.sendMessage(tab.id, {
+                    addon_url : url,
+                    addon_name : name,
+                    addon_on : !oldState
+                }, function(){
+                    //console.log("message sent:" + !oldState + " " + name + " " + url);
+                });
+            });
+        });
+    },
+    render: function() {
+        var renderName = this.props.name;
+        if (renderName.indexOf('-')>-1) {
+            renderName = renderName.split('-').join(' ');
+        }
+        return (
+            <button className="chrome-bootstrap toggle" onClick={this.onClick}>
+                {renderName} { + (this.state.on) ? " ✓" : ""}
+            </button>
+        )
     }
 });
 var StyleMenu = React.createClass({
@@ -67,8 +141,9 @@ var StyleMenu = React.createClass({
                 <Button url="https://raw.githubusercontent.com/calvcoll/rhodochronsite/master/rhodo.css" name="Rhodochronsite" current={this.state.current} setCurrent={this.setCurrent}/>
                 <Button url="https://raw.githubusercontent.com/WinterReign/Snowflake/master/snowflake%20classic%20black.css" name="Snowflake-Classic-Black" current={this.state.current} setCurrent={this.setCurrent}/>
                 <Button url="https://raw.githubusercontent.com/WinterReign/Snowflake/master/snowflake%20classic%20light.css" name="Snowflake-Classic-Light" current={this.state.current} setCurrent={this.setCurrent}/>
-                <Button url="https://github.com/pixeldesu/technicolour/releases/download/v3.0.0/technicolour-dark.css" name="Technicolour" current={this.state.current} setCurrent={this.setCurrent} />
                 <Button url="https://raw.githubusercontent.com/FractalHexagon/Snowflake/master/snowflake%20minima%20black%20aero.css" name="Snowflake-Minima-Black-Aero" current={this.state.current} setCurrent={this.setCurrent}/>
+                <h1>Add-ons</h1><hr />
+                <ToggleButton url="https://gist.githubusercontent.com/pixeldesu/1afcc9d3978d04bd3646/raw/9130ecd344a66b24009e915b8b74e9876e70b919/direct-message.scss" name="Direct-Message-Hiding"/>
             </div>
         );
     }

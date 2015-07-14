@@ -24,10 +24,9 @@
     "*://fonts.googleapis.com/*"
   ],
   "content_scripts": [{
-      "matches" : ["https://tweetdeck.twitter.com/*"],
+      "matches" : ["*://tweetdeck.twitter.com/*"],
       "js" : ["js/jquery.min.js", "js/inject.js"]
   }],
   "web_accessible_resources": [
-    "popup.html"
   ]
 }
