@@ -118,13 +118,13 @@ var changeStyle = function(url, name) {
                 }
                 var current_style = '<style class="snwflk style">' + style + '</style>';
                 $('.snwflk.style').remove();
+                $('.snwflk.style').addClass(name);
                 $(document.head).append(current_style);
-                $('.snwflk.style').addClass(name)
             });
         } else {
-            $('.snwflk').remove();
+            $('.snwflk.style').remove();
         }
     } else {
-        $('.snwflk').remove();
+        $('.snwflk.style').remove();
     }
 };
