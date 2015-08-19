@@ -26,7 +26,7 @@ var Button = React.createClass({displayName: "Button",
         chrome.tabs.query({url: '*://tweetdeck.twitter.com/*'}, function(tabs) {
             tabs.forEach(function(tab) {
                 chrome.tabs.sendMessage(tab.id, {
-                    toggle : button.state.on
+                    toggle : this.state.on
                 }, function(){
                     console.log("message sent: toggle");
                 });
