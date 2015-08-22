@@ -93,7 +93,7 @@ var changeStyle = function(url, name) {
         $('link').each(function (index, element) {
             element = $(element);
             if (element.attr('rel') == "stylesheet" && element.attr('title')) {
-                if (name.indexOf('Light') > -1) {
+                if ((name.indexOf('Light') > -1) || name.indexOf('Minima-White') > -1) {
                     if (element.attr('title') == "dark") {
                         element.prop('disabled', true);
                     } else {
