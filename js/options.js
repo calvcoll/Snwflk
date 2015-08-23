@@ -145,7 +145,8 @@ var StyleMenu = React.createClass({displayName: "StyleMenu",
                 React.createElement(Button, {url: "https://raw.githubusercontent.com/FractalHexagon/Snowflake/master/snowflake%20minima%20white%20aqua.css", name: "Snowflake-Minima-White-Aqua", current: this.state.current, setCurrent: this.setCurrent}), 
                 React.createElement(Button, {url: "https://raw.githubusercontent.com/FractalHexagon/Snowflake/minima_white_rewrite/snowflake%20minima%20white%20aqua.css", name: "Snowflake-Minima-White-Aqua-Rewrite-Branch", current: this.state.current, setCurrent: this.setCurrent}), 
                 React.createElement("h1", null, "Add-ons"), React.createElement("hr", null), 
-                React.createElement(ToggleButton, {url: "https://gist.githubusercontent.com/pixeldesu/1afcc9d3978d04bd3646/raw/9130ecd344a66b24009e915b8b74e9876e70b919/direct-message.scss", name: "Direct-Message-Hiding"})
+                React.createElement(ToggleButton, {url: "https://gist.githubusercontent.com/pixeldesu/1afcc9d3978d04bd3646/raw/9130ecd344a66b24009e915b8b74e9876e70b919/direct-message.scss", name: "Direct-Message-Hiding"}), 
+                React.createElement(ToggleButton, {url: "https://raw.githubusercontent.com/FractalHexagon/Snowflake/minima_white_rewrite/force-normal-case.css", name: "Force-Default-Case"})
             )
         );
     }
