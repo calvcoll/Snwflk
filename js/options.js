@@ -50,36 +50,37 @@ var ToggleButton = React.createClass({displayName: "ToggleButton",
                     in_list = true;
                 }
             }
-        }.bind(this));
-        list = list == undefined ? [] : list;
-        url_list = url_list == undefined ? [] : url_list;
-        var new_list = list;
-        var new_url_list = url_list;
-        if (oldState && in_list) { //no oldState && !inList as no change needed
-            var index = list.indexOf(this.props.name);
-            if (index >= 0) {
-                new_list = list.splice(index, 1);
-                new_url_list = url_list.splice(index, 1);
+            // placed in here so it gets vals
+            list = list == undefined ? [] : list;
+            url_list = url_list == undefined ? [] : url_list;
+            var new_list = list;
+            var new_url_list = url_list;
+            if (oldState && in_list) { //no oldState && !inList as no change needed
+                var index = list.indexOf(this.props.name);
+                if (index >= 0) {
+                    new_list = list.splice(index, 1);
+                    new_url_list = url_list.splice(index, 1);
+                }
+            } else if (!oldState && !in_list) { //no !oldstate && in_list as addon is needed
+                new_list.push(this.props.name);
+                new_url_list.push(this.props.url);
             }
-        } else if (!oldState && !in_list) { //no !oldstate && in_list as addon is needed
-            new_list.push(this.props.name);
-            new_url_list.push(this.props.url);
-        }
-        chrome.storage.sync.set({
-            current_add_on : new_list,
-            current_add_on_url : new_url_list
-        });
-        chrome.tabs.query({url: '*://tweetdeck.twitter.com/*'}, function(tabs) {
-            tabs.forEach(function(tab) {
-                chrome.tabs.sendMessage(tab.id, {
-                    addon_url : url,
-                    addon_name : name,
-                    addon_on : !oldState
-                }, function(){
-                    //console.log("message sent:" + !oldState + " " + name + " " + url);
+            chrome.storage.sync.set({
+                current_add_on : new_list,
+                current_add_on_url : new_url_list
+            });
+            chrome.tabs.query({url: '*://tweetdeck.twitter.com/*'}, function(tabs) {
+                tabs.forEach(function(tab) {
+                    chrome.tabs.sendMessage(tab.id, {
+                        addon_url : url,
+                        addon_name : name,
+                        addon_on : !oldState
+                    }, function(){
+                        //console.log("message sent:" + !oldState + " " + name + " " + url);
+                    });
                 });
             });
-        });
+        }.bind(this));
     },
     render: function() {
         var renderName = this.props.name;
@@ -144,7 +145,6 @@ var StyleMenu = React.createClass({displayName: "StyleMenu",
                 React.createElement(Button, {url: "https://raw.githubusercontent.com/WinterReign/Snowflake/master/snowflake%20minima%20synth.css", name: "Snowflake-Minima-Synth", current: this.state.current, setCurrent: this.setCurrent}), 
                 React.createElement(Button, {url: "https://raw.githubusercontent.com/FractalHexagon/Snowflake/master/snowflake%20minima%20black%20aero.css", name: "Snowflake-Minima-Black-Aero", current: this.state.current, setCurrent: this.setCurrent}), 
                 React.createElement(Button, {url: "https://raw.githubusercontent.com/FractalHexagon/Snowflake/master/snowflake%20minima%20white%20aqua.css", name: "Snowflake-Minima-White-Aqua", current: this.state.current, setCurrent: this.setCurrent}), 
-                React.createElement(Button, {url: "https://raw.githubusercontent.com/FractalHexagon/Snowflake/minima_white_rewrite/snowflake%20minima%20white%20aqua.css", name: "Snowflake-Minima-White-Aqua-Rewrite-Branch", current: this.state.current, setCurrent: this.setCurrent}), 
                 React.createElement("h1", null, "Add-ons"), React.createElement("hr", null), 
                 React.createElement(ToggleButton, {url: "https://gist.githubusercontent.com/pixeldesu/1afcc9d3978d04bd3646/raw/9130ecd344a66b24009e915b8b74e9876e70b919/direct-message.scss", name: "Direct-Message-Hiding"}), 
                 React.createElement(ToggleButton, {url: "https://raw.githubusercontent.com/FractalHexagon/Snowflake/master/force-normal-case.css", name: "Force-Default-Case"})
