@@ -1,3 +1,6 @@
+var debug = true;
+// Prevent caching if debugging
+if (debug) $.ajaxSetup({ cache: false });
 $(document.head).ready(function() {
     chrome.storage.sync.get(["current_add_on", "current_add_on_url"], function(data) {
         var addons = data.current_add_on;
