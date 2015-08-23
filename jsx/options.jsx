@@ -139,9 +139,9 @@ var StyleMenu = React.createClass({
             <div className="buttonContainer">
                 <div className="online"> Online: <div className={"online-icon " + (this.state.online ? 'online' : 'offline')}/></div>
                 <Button url="https://raw.githubusercontent.com/calvcoll/rhodochronsite/master/rhodo.css" name="Rhodochronsite" current={this.state.current} setCurrent={this.setCurrent}/>
-                <Button url="https://raw.githubusercontent.com/WinterReign/Snowflake/master/snowflake%20minima%20synth.css" name="Snowflake-Minima-Synth" current={this.state.current} setCurrent={this.setCurrent}/>
                 <Button url="https://raw.githubusercontent.com/WinterReign/Snowflake/master/snowflake%20classic%20black.css" name="Snowflake-Classic-Black" current={this.state.current} setCurrent={this.setCurrent}/>
                 <Button url="https://raw.githubusercontent.com/WinterReign/Snowflake/master/snowflake%20classic%20light.css" name="Snowflake-Classic-Light" current={this.state.current} setCurrent={this.setCurrent}/>
+                <Button url="https://raw.githubusercontent.com/WinterReign/Snowflake/master/snowflake%20minima%20synth.css" name="Snowflake-Minima-Synth" current={this.state.current} setCurrent={this.setCurrent}/>
                 <Button url="https://raw.githubusercontent.com/FractalHexagon/Snowflake/master/snowflake%20minima%20black%20aero.css" name="Snowflake-Minima-Black-Aero" current={this.state.current} setCurrent={this.setCurrent}/>
                 <Button url="https://raw.githubusercontent.com/FractalHexagon/Snowflake/master/snowflake%20minima%20white%20aqua.css" name="Snowflake-Minima-White-Aqua" current={this.state.current} setCurrent={this.setCurrent}/>
                 <Button url="https://raw.githubusercontent.com/FractalHexagon/Snowflake/minima_white_rewrite/snowflake%20minima%20white%20aqua.css" name="Snowflake-Minima-White-Aqua-Rewrite-Branch" current={this.state.current} setCurrent={this.setCurrent}/>
