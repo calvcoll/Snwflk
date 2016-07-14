@@ -1,0 +1,24 @@
+{
+  "name": "snwflk",
+  "version": "1.0.0",
+  "description": "Snwflk is a switcher currently being developed, to enable easy switching between styles for Tweetdeck, created by FractalHexagon and myself. It has been developed as a Chrome extension and should easily be able to loaded as an unpacked extension in Chrome. The popup poge, as well as the options page are dynamically generated using the React framework, with the options page styling mainly using Chrome-Bootstrap.",
+  "dependencies": {
+    "babel-cli":"latest",
+    "babel-preset-es2015":"latest",
+    "babel-preset-react":"latest"
+  },
+  "scripts": {
+    "constant-transform-to-js": "babel --presets es2015,react --watch jsx/ --out-dir js/",
+    "transform-to-js": "babel --presets es2015,react jsx/ --out-dir js/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/calvcoll/Snwflk.git"
+  },
+  "author": "Calv Collins",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/calvcoll/Snwflk/issues"
+  },
+  "homepage": "https://github.com/calvcoll/Snwflk#readme"
+}
