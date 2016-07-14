@@ -4,7 +4,8 @@ It has been developed as a Chrome extension and should easily be able to loaded 
 The popup poge, as well as the options page are dynamically generated using the React framework, with the options page styling mainly using Chrome-Bootstrap.
 
 #Contributions
-DO NOT EDIT ANY JS FOLDER FILES THAT ARE IN THE JSX FOLDER WITH THE EXTENSION JSX
+**Do not edit any files in the JS folder, these are dynamically generated.**
 
-This is due to these files being dynamically generated via react-tools' jsx program.
-Other than that everything should be fair game.
+`npm install` should install the dependencies
+`npm run transform-to-js` should transform the jsx folder files to js
+`npm run constant-transform-to-js` should keep watch of changing jsx files and create js files whilst developing.
