@@ -2,28 +2,34 @@ var debug = true;
 // Prevent caching if debugging
 if (debug) $.ajaxSetup({ cache: false });
 $(document.head).ready(function() {
-    chrome.storage.sync.get(["current_add_on", "current_add_on_url"], function(data) {
-        var addons = data.current_add_on;
-        var addons_url = data.current_add_on_url;
+    chrome.storage.sync.get("addons", function(data) {
+        var addons = data.names;
+        var addons_url = data.urls;
         if (addons != undefined) {
             addons.forEach(function(element, index){
                 addon(addons_url[index], element, true);
             })
         }
     });
-    chrome.storage.sync.get(null, function(data) { //gets sync data -> current button
-        if (data.name != undefined && data.url != undefined) {
-            changeStyle(data.url, data.name);
+    chrome.storage.sync.get("style", function(style) { //gets sync data -> current button
+        if (style.name != undefined && style.url != undefined) {
+            changeStyle(style.url, style.name);
         }
     });
     injectFonts();
 });
 
-var toggle = true;
-var lastStyle = {
-    url: "",
-    name: ""
-};
+var toggle = undefined;
+chrome.storage.sync.get("toggle", function(data) {toggle=data});
+if (toggle === undefined || toggle === null) toggle = false;
+var lastStyle = undefined;
+chrome.storage.sync.get("style", function(style) {lastStyle = style});
+if (lastStyle === undefined || toggle === null) {
+  lastStyle = {
+    url:"",
+    name:""
+  }
+}
 
 chrome.runtime.onMessage.addListener(
     function(message, sender, sendResponse) {
@@ -67,27 +73,20 @@ var injectFonts = function() {
 
 var addon = function(url, name, on) {
     if (on) {
-        $.get(url).done(function (data) {
-            //if (url.indexOf('.scss') >= 0) {
-            //    sass.compile(data, function(result) {
-            //        var element = "<style class=\"snwflk addon " + name + "\">" + result + "</style>";
-            //        $(document.head).append(element);
-            //    })
-            //} else {
-                var element = "<style class=\"snwflk addon " + name + "\">" + data + "</style>";
-                $(document.head).append(element);
-            //}
-        });
+      $.get(url).done(function (data) {
+        var element = "<style class=\"snwflk addon " + name + "\">" + data + "</style>";
+        $(document.head).append(element);
+      });
     } else {
-        var item = $('.snwflk.addon.' + name);
-        console.log(item);
-        if (item) {
-            item.remove();
-        }
+      var item = $('.snwflk.addon.' + name);
+      console.log(item);
+      if (item) {
+          item.remove();
+      }
     }
 };
 
-// Getting round CORS implementation
+// Getting round CORS implementation + styling
 var changeStyle = function(url, name) {
     if (!(url == "" || name == "")) {
         lastStyle = {url: url, name: name};
