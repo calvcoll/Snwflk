@@ -11,9 +11,9 @@ $(document.head).ready(function() {
             })
         }
     });
-    chrome.storage.sync.get("style", function(style) { //gets sync data -> current button
-        if (style.name != undefined && style.url != undefined) {
-            changeStyle(style.url, style.name);
+    chrome.storage.sync.get("style", function(data) { //gets sync data -> current button
+        if (data.style.name != undefined && data.style.url != undefined) {
+            changeStyle(data.style.url, data.style.name);
         }
     });
     injectFonts();
