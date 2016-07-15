@@ -22,12 +22,14 @@ var Button = React.createClass({
 var ToggleButton = React.createClass({
     getInitialState: function() {
         chrome.storage.sync.get("addons", function(data) {
+          if (data.addons != undefined) {
             if (data.addons.names != undefined) {
                 var index = data.addons.names.indexOf(this.props.name);
                 if (index >= 0) {
                     this.setState({on : true});
                 }
             }
+          }
         }.bind(this));
         return {
             on : false
@@ -43,8 +45,13 @@ var ToggleButton = React.createClass({
         var url_list = [];
         var list_index = -1;
         chrome.storage.sync.get("addons", function(data) { //active
-            list = data.addons.names;
-            url_list = data.addons.urls;
+            if (data.addons != undefined) {
+              list = data.addons.names;
+              url_list = data.addons.urls;
+            } else {
+              list = undefined;
+              url_list = undefined;
+            }
             if (list != undefined) {
                 var index = list.indexOf(this.props.name);
                 if (index >= 0) {
@@ -103,10 +110,12 @@ var StyleMenu = React.createClass({
         var menu = this;
         var current = "";
         chrome.storage.sync.get("style", function(data) { //gets sync data -> current button
+          if (data.style != undefined) {
             if (data.style.name != undefined && data.style.url != undefined) {
                 current = data.style.name;
                 menu.setCurrent(data.style.name, data.style.url);
             }
+          }
         });
         return {
             online : false,

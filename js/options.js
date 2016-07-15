@@ -30,10 +30,12 @@ var ToggleButton = React.createClass({
 
     getInitialState: function getInitialState() {
         chrome.storage.sync.get("addons", function (data) {
-            if (data.addons.names != undefined) {
-                var index = data.addons.names.indexOf(this.props.name);
-                if (index >= 0) {
-                    this.setState({ on: true });
+            if (data.addons != undefined) {
+                if (data.addons.names != undefined) {
+                    var index = data.addons.names.indexOf(this.props.name);
+                    if (index >= 0) {
+                        this.setState({ on: true });
+                    }
                 }
             }
         }.bind(this));
@@ -52,8 +54,13 @@ var ToggleButton = React.createClass({
         var list_index = -1;
         chrome.storage.sync.get("addons", function (data) {
             //active
-            list = data.addons.names;
-            url_list = data.addons.urls;
+            if (data.addons != undefined) {
+                list = data.addons.names;
+                url_list = data.addons.urls;
+            } else {
+                list = undefined;
+                url_list = undefined;
+            }
             if (list != undefined) {
                 var index = list.indexOf(this.props.name);
                 if (index >= 0) {
@@ -70,22 +77,16 @@ var ToggleButton = React.createClass({
                 //was on - now off  and in list = remove it
                 var index = list.indexOf(this.props.name);
                 if (index >= 0) {
-                    // new_list = list.splice(index, 1);
                     list.splice(index, 1);
                     url_list.splice(index, 1);
-                    // new_url_list = url_list.splice(index, 1);
                 }
             } else if (!oldState && !in_list) {
                 //was off and is now on, and not in list
-                // new_list.push(this.props.name);
-                // new_url_list.push(this.props.url);
                 list.push(this.props.name);
                 url_list.push(this.props.url);
             }
             chrome.storage.sync.set({
                 addons: {
-                    // names : new_list,
-                    // urls : new_url_list
                     names: list,
                     urls: url_list
                 }
@@ -125,9 +126,11 @@ var StyleMenu = React.createClass({
         var current = "";
         chrome.storage.sync.get("style", function (data) {
             //gets sync data -> current button
-            if (data.style.name != undefined && data.style.url != undefined) {
-                current = data.style.name;
-                menu.setCurrent(data.style.name, data.style.url);
+            if (data.style != undefined) {
+                if (data.style.name != undefined && data.style.url != undefined) {
+                    current = data.style.name;
+                    menu.setCurrent(data.style.name, data.style.url);
+                }
             }
         });
         return {
