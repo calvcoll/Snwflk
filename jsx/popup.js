@@ -11,7 +11,7 @@ var Button = React.createClass({
         }
     },
     iconToggle: function () {
-        var icon = !this.state.on ? "img/snowflake_logo-48.png" : "img/snowflake_logo-48-disabled.png";
+        var icon = this.state.on ? "img/snowflake_logo-48.png" : "img/snowflake_logo-48-disabled.png";
         chrome.browserAction.setIcon({path: icon});
 
         $('#logo').attr("src", icon);
